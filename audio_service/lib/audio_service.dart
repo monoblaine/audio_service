@@ -3460,10 +3460,6 @@ class AudioServiceConfig {
   final bool androidNotificationClickStartsActivity;
 
   /// Whether the notification can be swiped away.
-  ///
-  /// If you set this to true, [androidStopForegroundOnPause] must be true as well,
-  /// otherwise this will not do anything, because when foreground service is active,
-  /// it forces notification to be ongoing.
   final bool androidNotificationOngoing;
 
   /// Whether the Android service should switch to a lower priority state when
@@ -3529,11 +3525,7 @@ class AudioServiceConfig {
     this.rewindInterval = const Duration(seconds: 10),
     this.preloadArtwork = false,
     this.androidBrowsableRootExtras,
-  })  : assert((artDownscaleWidth != null) == (artDownscaleHeight != null)),
-        assert(
-          !androidNotificationOngoing || androidStopForegroundOnPause,
-          'The androidNotificationOngoing will make no effect with androidStopForegroundOnPause set to false',
-        );
+  }) : assert((artDownscaleWidth != null) == (artDownscaleHeight != null));
 
   AudioServiceConfigMessage _toMessage() => AudioServiceConfigMessage(
         androidResumeOnClick: androidResumeOnClick,
