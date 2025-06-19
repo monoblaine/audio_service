@@ -354,7 +354,7 @@ public class AudioService extends MediaBrowserServiceCompat {
 
     public void stop() {
         if (config.androidStopForegroundOnCompleted) {
-            exitForegroundState();
+            exitForegroundState(false);
         }
         deactivateMediaSession();
         stopSelf();
@@ -719,12 +719,12 @@ public class AudioService extends MediaBrowserServiceCompat {
 
     private void exitPlayingState() {
         if (config.androidStopForegroundOnPause) {
-            exitForegroundState();
+            exitForegroundState(true);
         }
     }
 
-    private void exitForegroundState() {
-        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH);
+    private void exitForegroundState(final Boolean softStop) {
+        ServiceCompat.stopForeground(this, softStop ? ServiceCompat.STOP_FOREGROUND_DETACH : ServiceCompat.STOP_FOREGROUND_REMOVE);
         releaseWakeLock();
     }
 
