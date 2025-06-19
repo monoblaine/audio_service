@@ -353,6 +353,9 @@ public class AudioService extends MediaBrowserServiceCompat {
     }
 
     public void stop() {
+        if (config.androidStopForegroundOnCompleted) {
+            exitForegroundState();
+        }
         deactivateMediaSession();
         stopSelf();
     }
@@ -562,14 +565,11 @@ public class AudioService extends MediaBrowserServiceCompat {
             exitPlayingState();
         }
 
-        if (oldProcessingState != AudioProcessingState.idle && processingState == AudioProcessingState.idle) {
-            // TODO: Handle completed state as well?
+        if (
+            (oldProcessingState != AudioProcessingState.idle && processingState == AudioProcessingState.idle) ||
+            processingState == AudioProcessingState.completed
+        ) {
             stop();
-        } else if (processingState == AudioProcessingState.completed) {
-            if (config.androidStopForegroundOnCompleted) {
-                ServiceCompat.stopForeground(this, STOP_FOREGROUND_DETACH);
-                stop();
-            }
         } else if (processingState != AudioProcessingState.idle && notificationChanged) {
             updateNotification();
         }
